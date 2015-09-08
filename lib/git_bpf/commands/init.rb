@@ -135,6 +135,9 @@ class Init < GitFlow/'init'
     commands = [
       'recreate-branch',
       'share-rerere',
+      'bpf-new-cycle',
+      'bpf-init-cycle',
+      'bpf-feature-start'
     ]
 
     ohai "2. Creating aliases for commands:", commands.shell_list

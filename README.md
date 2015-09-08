@@ -1,5 +1,8 @@
-Affinity Bridge's Branch-per-Feature Scripts
-============================================
+Git Branch-per-Feature workflow automation Scripts
+==================================================
+
+This project is a fork of [UriHendler/git-bpf project] adding some scripts to ease the day to day use of Git BPF workflow.
+
 
 Configure a repository and add some useful [Branch-per-Feature] workflow commands.
 
@@ -72,6 +75,7 @@ Upgrading from older development versions of these scripts is a little bit sketc
 
 [Branch-per-Feature]: https://github.com/affinitybridge/git-bpf/wiki/Branch-per-feature-process
 [RubyGems]: http://rubygems.org/
+[UriHendler/git-bpf project]: https://github.com/UriHendler/git-bpf
 
 ## Manual install
 
