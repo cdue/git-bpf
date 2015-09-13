@@ -140,15 +140,29 @@ class Init < GitFlow/'init'
       'bpf-feature-start'
     ]
 
-    ohai "2. Creating aliases for commands:", commands.shell_list
+    commands_aliases = [
+      'bpf-recreate-branch',
+      'bpf-share-rerere',
+      'bpf-cycle-new',
+      'bpf-cycle-init',
+      'bpf-feature-start'
+    ]
 
-    commands.each do |name|
-      command = "!_git-bpf #{name}"
-      target.cmd("config", "--local", "alias.#{name}", command)
-    end
+    ohai "2. Creating aliases for commands:", commands_aliases.shell_list
+
+    # commands.each do |name|
+    #   command = "!_git-bpf #{name}"
+    #   target.cmd("config", "--local", "alias.#{name}", command)
+    # end
+
+    target.cmd("config", "--local", "alias.bpf-recreate-branch", "!_git-bpf recreate-branch")
+    target.cmd("config", "--local", "alias.bpf-share-rerere", "!_git-bpf share-rerere")
+    target.cmd("config", "--local", "alias.bpf-cycle-new", "!_git-bpf bpf-new-cycle")
+    target.cmd("config", "--local", "alias.bpf-cycle-init", "!_git-bpf bpf-init-cycle")
+    target.cmd("config", "--local", "alias.bpf-feature-start", "!_git-bpf bpf-feature-start")
 
     command = '!sh -c \".git/git-bpf/commands/merge-to-integration.sh $1\"'
-    target.cmd("config", "--local", "alias.merge-to-integration", command)
+    target.cmd("config", "--local", "alias.bpf-feature-integrate", command)
 
 
     #

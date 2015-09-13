@@ -30,7 +30,7 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
 
   def execute(opts, argv)
     #if argv.length != 1
-    #  run('bpf-new-cycle', '--help')
+    #  run('bpf-cycle-new', '--help')
     #  terminate
     #end
 
@@ -64,14 +64,14 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
     puts 'Deleting local QA branch (if it exists)'
     git('branch', '-d', 'QA') if branchExists? 'QA'
     git('checkout', '-b', 'develop', opts.base)
-    puts 'Replacing remote develop branch with #{opts.base}'
-    git('push', opts.remote, 'develop', '--force')
+    puts "Replacing remote develop branch with #{opts.base}"
+    git('push', '-u', opts.remote, 'develop', '--force')
     git('checkout', '-b', 'QA', opts.base)
     puts "Replacing remote QA branch with #{opts.base}"
-    git('push', opts.remote, 'QA', '--force')
+    git('push', '-u', opts.remote, 'QA', '--force')
     git('checkout', opts.base)
 
-    puts 'Done... New cycle iniated from #{opts.base}'
+    puts "Done... New cycle iniated from #{opts.base}"
   end
 
 end

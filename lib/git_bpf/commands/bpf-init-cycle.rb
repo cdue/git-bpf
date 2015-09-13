@@ -30,7 +30,7 @@ class BpfInitCycle < GitFlow/'bpf-init-cycle'
 
   def execute(opts, argv)
     #if argv.length != 1
-    #  run('bpf-init-cycle', '--help')
+    #  run('bpf-cycle-init', '--help')
     #  terminate
     #end
 

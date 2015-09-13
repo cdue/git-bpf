@@ -45,7 +45,7 @@ class RecreateBranch < GitFlow/'recreate-branch'
 
   def execute(opts, argv)
     if argv.length != 1
-      run('recreate-branch', '--help')
+      run('bpf-recreate-branch', '--help')
       terminate
     end
 

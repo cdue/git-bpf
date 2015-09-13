@@ -36,7 +36,7 @@ class ShareReReRe < GitFlow/'share-rerere'
   HELP
 
   def execute(opts, argv)
-    run('share-rerere', '--help')
+    run('bpf-share-rerere', '--help')
   end
 
   class PullReReRe < ShareReReRe/'pull'
