@@ -6,11 +6,11 @@ require 'git_bpf/version'
 Gem::Specification.new do |spec|
   spec.name          = "git_bpf"
   spec.version       = GitBpf::VERSION
-  spec.authors       = ["cdue"]
-  spec.email         = ["cedric.due@gmail.com"]
+  spec.authors       = ["ceddue"]
+  spec.email         = ["cdue@prosodie.com"]
   spec.description   = %q{A collection of commands to help with implementing the branch-per-feature git development workflow.}
   spec.summary       = %q{Git branch-per-feature helper commands.}
-  spec.homepage      = "https://github.com/cdue/git-bpf"
+  spec.homepage      = "https://github.com/ceddue/git-bpf"
   spec.license       = "BSD"
 
   spec.files         = `git ls-files`.split($/)
