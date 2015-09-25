@@ -10,7 +10,7 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
 
   @@prefix = "BRANCH-PER-FEATURE-PREFIX"
 
-  @documentation = "Recreates 'develop' and 'QA' branches from the latest version of 'master' or a given Tag."
+  @documentation = "Recreates 'develop', 'QA' and 'release' branches from the latest version of 'master' or a given Tag."
 
 
   def options(opts)
@@ -19,7 +19,7 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
 
     [
       ['-a', '--base NAME',
-        "A reference to the commit from which 'develop' and 'QA' branches are based, defaults to #{opts.base}.",
+        "A reference to the commit from which 'develop', 'QA' and 'release' branches are based, defaults to #{opts.base}.",
         lambda { |n| opts.base = n }],
       ['-v', '--verbose',
         "Show more info...",
@@ -53,22 +53,34 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
     puts 'Fetching tags...'
     git('fetch', '--all', '--tags')
 
-    opoo "Are you sure you want to overwrite 'develop' and 'QA' branches (local and remote) with #{opts.base}?"
+    opoo "Are you sure you want to overwrite 'develop', 'QA' and 'release' branches (local and remote) with #{opts.base}?"
     if not promptYN "Continue?"
       terminate "Aborting."
     end
     git('checkout', opts.base)
     git('pull', opts.remote, opts.base)
+
     puts 'Deleting local develop branch (if it exists)'
     git('branch', '-d', 'develop') if branchExists? 'develop'
+
     puts 'Deleting local QA branch (if it exists)'
     git('branch', '-d', 'QA') if branchExists? 'QA'
+
+    puts 'Deleting local release branch (if it exists)'
+    git('branch', '-d', 'release') if branchExists? 'release'
+
     git('checkout', '-b', 'develop', opts.base)
     puts "Replacing remote develop branch with #{opts.base}"
     git('push', '-u', opts.remote, 'develop', '--force')
+
     git('checkout', '-b', 'QA', opts.base)
     puts "Replacing remote QA branch with #{opts.base}"
     git('push', '-u', opts.remote, 'QA', '--force')
+
+    git('checkout', '-b', 'release', opts.base)
+    puts "Replacing remote release branch with #{opts.base}"
+    git('push', '-u', opts.remote, 'release', '--force')
+
     git('checkout', opts.base)
 
     puts "Done... New cycle iniated from #{opts.base}"
