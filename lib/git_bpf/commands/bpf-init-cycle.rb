@@ -53,6 +53,12 @@ class BpfInitCycle < GitFlow/'bpf-init-cycle'
     git('checkout', 'QA')
     # consider origin/QA exists
     git('reset', '--hard', '#{opts.remote}/QA')
+    git('checkout', 'release')
+    # consider origin/release exists
+    git('reset', '--hard', '#{opts.remote}/release')
+    git('checkout', 'pfr-p2000')
+    # consider origin/pfr-p2000 exists
+    git('reset', '--hard', '#{opts.remote}/pfr-p2000')
     git('checkout', 'master')
 
     puts "Done... Local repository ready for new BPF development cycle ('develop' and 'QA' local branches had been reset)."

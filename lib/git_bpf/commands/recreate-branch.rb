@@ -184,6 +184,33 @@ class RecreateBranch < GitFlow/'recreate-branch'
     end
   end
 
+  def firstBranchNameIncludesSecond(first_branch, second_branch)
+    # fist extract branch name only.
+    # example: for "remotes/origin/f-US123~4" extract "f-US123"
+
+    if first_branch.include? '/'
+      first_branch = first_branch.rpartition('/').last
+    end
+    if first_branch.include? '~'
+      first_branch = first_branch.partition('~')[0]
+    end
+    
+    if second_branch.include? '/'
+      second_branch = second_branch.rpartition('/').last
+    end
+    if second_branch.include? '~'
+      second_branch = second_branch.partition('~')[0]
+    end
+    
+    matches = false
+
+    if first_branch.eql? second_branch
+      matches = true
+    end
+
+    return matches
+  end
+
   def getMergedBranches(base, source, verbose)
     repo = Repository.new(Dir.getwd)
     remote_recreate = repo.config(true, "--get", "gitbpf.remoterecreate").chomp
@@ -214,7 +241,11 @@ class RecreateBranch < GitFlow/'recreate-branch'
       alt_base = git('name-rev', base, '--name-only').strip
       remote_heads = /\w+\/HEAD/
 
-      if name.include? source or name.include? alt_base or name.match remote_heads
+      if verbose
+        puts "name of branch (for hash: '#{branch_hash}'): '#{name}'"
+      end
+
+      if firstBranchNameIncludesSecond(name, source) or firstBranchNameIncludesSecond(name, alt_base) or name.match remote_heads
         if verbose
           puts "INFO: <#{commit_name}> skipped because '#{name}' matches #{source} / #{alt_base} / #{remote_heads}"
           puts '      Possible problem: Mainline branch has been merged into task branch.'
@@ -231,6 +262,7 @@ class RecreateBranch < GitFlow/'recreate-branch'
         # as this signifies a commit that's behind the head of the branch but
         # we want to merge in the head of the branch.
         name = name.partition('~')[0]
+        
         # This can lead to duplicate branches, because the name may have only
         # differed in the tilde portion ('mybranch~1', 'mybranch~2', etc.)
         if branches.include? name

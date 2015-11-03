@@ -10,7 +10,7 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
 
   @@prefix = "BRANCH-PER-FEATURE-PREFIX"
 
-  @documentation = "Recreates 'develop', 'QA' and 'release' branches from the latest version of 'master' or a given Tag."
+  @documentation = "Recreates 'develop', 'QA', 'release' and 'pfr-p2000' branches from the latest version of 'master' or a given Tag."
 
 
   def options(opts)
@@ -69,6 +69,9 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
     puts 'Deleting local release branch (if it exists)'
     git('branch', '-d', 'release') if branchExists? 'release'
 
+    puts 'Deleting local pfr-p2000 branch (if it exists)'
+    git('branch', '-d', 'pfr-p2000') if branchExists? 'pfr-p2000'
+
     git('checkout', '-b', 'develop', opts.base)
     puts "Replacing remote develop branch with #{opts.base}"
     git('push', '-u', opts.remote, 'develop', '--force')
@@ -80,6 +83,10 @@ class BpfNewCycle < GitFlow/'bpf-new-cycle'
     git('checkout', '-b', 'release', opts.base)
     puts "Replacing remote release branch with #{opts.base}"
     git('push', '-u', opts.remote, 'release', '--force')
+
+    git('checkout', '-b', 'pfr-p2000', opts.base)
+    puts "Replacing remote pfr-p2000 branch with #{opts.base}"
+    git('push', '-u', opts.remote, 'pfr-p2000', '--force')
 
     git('checkout', opts.base)
 
