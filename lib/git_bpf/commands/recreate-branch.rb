@@ -39,7 +39,9 @@ class RecreateBranch < GitFlow/'recreate-branch'
       ['-v', '--verbose',
         "Show more info about skipping branches etc.",
         lambda { |n| opts.verbose = true }],
-
+      ['-f', '--file NAME',
+        "Instead of finding wich branches to merge using merge-commits, we'll use a list of branches provided in the given file NAME.",
+        lambda { |n| opts.file = n }],
     ]
   end
 
@@ -88,9 +90,15 @@ class RecreateBranch < GitFlow/'recreate-branch'
     #
     # 1. Compile a list of merged branches from source branch.
     #
-    ohai "1. Processing branch '#{source}' for merge-commits..."
+    if opts.file == nil
+      ohai "1. Processing branch '#{source}' for merge-commits..."
 
-    branches = getMergedBranches(opts.base, source, opts.verbose)
+      branches = getMergedBranches(opts.base, source, opts.verbose)
+    else
+      ohai "1. Getting branches list to merge into '#{source}'..."
+
+      branches = getBranchesFromFile(opts.file)
+    end
 
     if branches.empty?
       terminate "No feature branches detected, '#{source}' matches '#{opts.base}'."
@@ -211,6 +219,35 @@ class RecreateBranch < GitFlow/'recreate-branch'
     return matches
   end
 
+  def getBranchesFromFile(filepath)
+    
+    branches = []
+
+    if(File.file?(filepath))
+
+      #branches_list=File.open(filepath).read
+      #branches_list.gsub!(/\r\n?/, "\n")
+      #branches_list.each_line do |branch|
+      File.readlines(filepath).each do |branch|
+        branch = branch.strip;
+
+        if branches.include? branch
+          if verbose
+            puts "INFO: <#{branch}> skipped because it's already in the list."
+          end
+        else
+          if branch.to_s != ''
+            branches.push branch
+          end
+        end
+      end
+    else
+      terminate "ERROR: <#{filepath}> doesn't exists or is not a file."
+    end
+
+    return branches
+  end
+
   def getMergedBranches(base, source, verbose)
     repo = Repository.new(Dir.getwd)
     remote_recreate = repo.config(true, "--get", "gitbpf.remoterecreate").chomp
@@ -262,7 +299,7 @@ class RecreateBranch < GitFlow/'recreate-branch'
         # as this signifies a commit that's behind the head of the branch but
         # we want to merge in the head of the branch.
         name = name.partition('~')[0]
-        
+
         # This can lead to duplicate branches, because the name may have only
         # differed in the tilde portion ('mybranch~1', 'mybranch~2', etc.)
         if branches.include? name
