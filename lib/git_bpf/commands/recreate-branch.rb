@@ -155,7 +155,7 @@ class RecreateBranch < GitFlow/'recreate-branch'
         puts " - '#{branch}'"
         # Attempt to merge in the branch. If there is no conflict at all, we
         # just move on to the next one.
-        git('merge', '--quiet', '--no-ff', '--no-edit', branch)
+        git('merge', '-Xignore-all-space', '--quiet', '--no-ff', '--no-edit', branch)
       rescue
         # There was a conflict. If there's no available rerere for it then it is
         # unresolved and we need to abort as there's nothing that can be done
