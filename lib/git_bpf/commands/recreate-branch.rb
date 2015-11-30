@@ -97,7 +97,7 @@ class RecreateBranch < GitFlow/'recreate-branch'
     else
       ohai "1. Getting branches list to merge into '#{source}'..."
 
-      branches = getBranchesFromFile(opts.file)
+      branches = getBranchesFromFile(opts.file, opts.verbose)
     end
 
     if branches.empty?
@@ -219,7 +219,7 @@ class RecreateBranch < GitFlow/'recreate-branch'
     return matches
   end
 
-  def getBranchesFromFile(filepath)
+  def getBranchesFromFile(filepath, verbose)
     
     branches = []
 
