@@ -36,7 +36,9 @@ class RecreateBranch < GitFlow/'recreate-branch'
       ['-r', '--remote NAME',
         "Specify the remote repository to work with. Only works with the -d option.",
         lambda { |n| opts.remote = n }],
-
+      ['-q', '--quiet',
+        "Process without prompt.",
+        lambda { |n| opts.quiet = true }],
     ]
   end
 
@@ -111,10 +113,11 @@ class RecreateBranch < GitFlow/'recreate-branch'
     puts "a) that your '#{source}' branch is up to date"
     puts "b) if '#{opts.base}' is a branch, make sure it is also up to date."
     opoo "If there are any non-merge commits in '#{source}', they will not be included in '#{opts.branch}'. You have been warned."
-    if not promptYN "Proceed with #{source} branch recreation?"
-      terminate "Aborting."
+    if not opts.quiet
+      if not promptYN "Proceed with #{source} branch recreation?"
+        terminate "Aborting."
+      end
     end
-
     #
     # 2. Backup existing local source branch.
     #
